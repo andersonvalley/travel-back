@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express'
 import mongoose from 'mongoose'
 import multer from 'multer'
@@ -8,7 +9,7 @@ import { UserController, PostController } from './controllers/index.js'
 import { registerValidation, loginValidation, postCreateValidation } from './validations/index.js'
 
 mongoose
-  .connect('mongodb+srv://admin:wwwwww@cluster0.s59fl.mongodb.net/blog?retryWrites=true&w=majority')
+  .connect(process.env.MONGO_DB_URI)
   .then(() => {
     console.log('db connected')
   })
@@ -48,7 +49,7 @@ app.post('/posts', checkAuth, postCreateValidation, handlerValidationErrors, Pos
 app.delete('/posts/:id', checkAuth, PostController.remove)
 app.patch('/posts/:id', checkAuth, postCreateValidation, handlerValidationErrors, PostController.update)
 
-app.listen(5000, err => {
+app.listen(process.env.PORT || 5000, err => {
   if (err) {
     return console.log(err)
   }
