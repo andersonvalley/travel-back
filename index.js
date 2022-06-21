@@ -7,8 +7,10 @@ import cors from 'cors'
 import fs from 'fs'
 
 import { checkAuth, handlerValidationErrors } from './utils/index.js'
-import { UserController, PostController } from './controllers/index.js'
+import { UserController, PostController, CitiesController } from './controllers/index.js'
 import { registerValidation, loginValidation, postCreateValidation } from './validations/index.js'
+
+const PORT = process.env.PORT || 5000
 
 mongoose
   .connect(process.env.MONGO_DB_URI)
@@ -54,10 +56,14 @@ app.post('/posts', checkAuth, postCreateValidation, handlerValidationErrors, Pos
 app.delete('/posts/:id', checkAuth, PostController.remove)
 app.patch('/posts/:id', checkAuth, postCreateValidation, handlerValidationErrors, PostController.update)
 
-app.listen(process.env.PORT || 5000, err => {
+app.get('/cities', CitiesController.getAll)
+app.post('/cities', CitiesController.create) 
+app.get('/cities/:id', CitiesController.getOne)
+
+app.listen(PORT, err => {
   if (err) {
     return console.log(err)
   }
 
-  console.log('server OK')
+  console.log(`server OK on port ${PORT}`)
 })
